@@ -1,20 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef } from '@angular/core';
 
 @Component({
     selector: 'to-do-list',
     template: `
-        <h1>To-do list</h1>
-        <todo-item [item]="todoItem" (completed)="updateCompletedStatus($event)" [ngClass]="{ 'completed': todoItem.completed }" ></todo-item>
+        <ng-container #vc></ng-container>
     `,
-    styles: [`:host { padding: 20px; clear: both; float: left; border: solid 3px blue; width: 100%; max-width: 100vw; box-sizing: border-box; } .completed { opacity: .42; }`]
 })
 export class TodoListComponent {
 
-    todoItem = {
-        title: 'go get a beer',
-        completed: false
-    };
-    updateCompletedStatus(status: any) {
-        this.todoItem.completed = status;
+    @ViewChild('vc', { read: ViewContainerRef }) vc: ViewContainerRef;
+
+    addItem(v) {
+        this.vc.insert(v);
+        // console.log( `index of :: ${this.vc.indexOf(v)}` );
     }
+
+    removeItem(index) {
+        return this.vc.detach(index);
+    }
+
 }
